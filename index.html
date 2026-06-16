@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTools Pro — Premium AI Coding Subscriptions at 50% Off</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s ease-out forwards',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'flip': 'flip 0.6s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        pulseGlow: { '0%, 100%': { boxShadow: '0 0 20px rgba(99,102,241,0.3)' }, '50%': { boxShadow: '0 0 40px rgba(99,102,241,0.6)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+                        flip: { '0%': { transform: 'rotateY(0deg)' }, '50%': { transform: 'rotateY(90deg)' }, '100%': { transform: 'rotateY(0deg)' } },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text { background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .card-hover:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 25px 50px -12px rgba(99,102,241,0.25); }
+        .glass { background: rgba(17,24,39,0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .flip-card { perspective: 1000px; }
+        .flip-card-inner { transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card-inner.flipping { animation: flip 0.6s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 glass border-b border-gray-800/50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <a href="#" class="text-2xl font-bold gradient-text">DevTools Pro</a>
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#what" class="text-gray-400 hover:text-indigo-400 transition-colors text-sm font-medium">What You Get</a>
+                <a href="#pricing" class="text-gray-400 hover:text-indigo-400 transition-colors text-sm font-medium">Pricing</a>
+                <a href="#models" class="text-gray-400 hover:text-indigo-400 transition-colors text-sm font-medium">AI Models</a>
+                <a href="#signup" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-semibold transition-all hover:shadow-lg hover:shadow-indigo-500/25">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center justify-center relative pt-20">
+            <div class="absolute inset-0 bg-gradient-to-b from-indigo-950/20 via-gray-950 to-gray-950"></div>
+            <div class="absolute top-20 left-1/4 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl animate-pulse-glow"></div>
+            <div class="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl animate-pulse-glow" style="animation-delay:1s;"></div>
+            
+            <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+                <div class="animate-fade-in">
+                    <span class="inline-block px-4 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-sm font-medium mb-6">🔥 Limited Time — 50% Off All Plans | No GST</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold mb-6 animate-slide-up leading-tight">
+                    Same Power. <span class="gradient-text">Half The Price.</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl mx-auto animate-slide-up" style="animation-delay:0.2s;">
+                    Get Kiro — the AI-powered coding IDE used by thousands — at flat 50% off market price. Same models, same features, same everything. Just cheaper.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style="animation-delay:0.4s;">
+                    <a href="#signup" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-lg font-semibold transition-all hover:shadow-xl hover:shadow-indigo-500/25 hover:-translate-y-1">
+                        Grab Your Plan Now →
+                    </a>
+                    <a href="#what" class="px-8 py-4 border border-gray-700 hover:border-indigo-500 rounded-xl text-lg font-semibold text-gray-300 hover:text-white transition-all">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- What You Get Section -->
+        <section id="what" class="py-20 px-4">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-4">What is <span class="gradient-text">Kiro</span> in the Market?</h2>
+                    <p class="text-gray-400 max-w-2xl mx-auto">Kiro is a premium AI-powered IDE that brings engineering rigor to agentic development. It manages intent, completes long-running tasks across large codebases, and validates code correctness. In the market, plans range from $20 to $200/month.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
+                        <div class="text-2xl mb-3">🏷️</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Market Price vs Our Price</h3>
+                        <p class="text-gray-400 text-sm">Kiro sells Pro at $20, Pro+ at $40, Pro Max at $100, Power at $200. We offer the exact same subscriptions at <span class="text-emerald-400 font-bold">flat 50% off</span> — no catch.</p>
+                    </div>
+                    <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
+                        <div class="text-2xl mb-3">🤖</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Same Features, Same Models</h3>
+                        <p class="text-gray-400 text-sm">You get access to Claude Opus 4.8, Sonnet 4.6, Auto, and all premium models. Specs, Vibe mode, CLI, Web — everything included. Exact same as direct purchase.</p>
+                    </div>
+                    <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
+                        <div class="text-2xl mb-3">🎥</div>
+                        <h3 class="text-lg font-bold text-white mb-2">1:1 Setup on Google Meet</h3>
+                        <p class="text-gray-400 text-sm">We walk you through the entire setup live on a Google Meet call. Screen share, install, activate — you'll be coding with AI in minutes. No confusion, no guessing.</p>
+                    </div>
+                    <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
+                        <div class="text-2xl mb-3">✅</div>
+                        <h3 class="text-lg font-bold text-white mb-2">100% Genuine — No Fraud</h3>
+                        <p class="text-gray-400 text-sm">Real subscriptions, real accounts, real support. We've served hundreds of developers. Connect on WhatsApp, verify everything before paying. Zero risk.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Models Section -->
+        <section id="models" class="py-20 px-4 bg-gray-900/30">
+            <div class="max-w-5xl mx-auto text-center">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">All <span class="gradient-text">Premium AI Models</span> Included</h2>
+                <p class="text-gray-400 mb-12 max-w-xl mx-auto">Every paid plan gives you access to the same powerful models that cost $20-$200/month directly.</p>
+                
+                <div class="flex flex-wrap justify-center gap-3">
+                    <span class="px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-sm text-indigo-300 animate-float" style="animation-delay:0s;">Claude Opus 4.8</span>
+                    <span class="px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-sm text-indigo-300 animate-float" style="animation-delay:0.2s;">Claude Sonnet 4.6</span>
+                    <span class="px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-sm text-indigo-300 animate-float" style="animation-delay:0.4s;">Claude Sonnet 4.5</span>
+                    <span class="px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-full text-sm text-purple-300 animate-float" style="animation-delay:0.6s;">Auto</span>
+                    <span class="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-full text-sm text-gray-300 animate-float" style="animation-delay:0.8s;">Qwen3 Coder Next</span>
+                    <span class="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-full text-sm text-gray-300 animate-float" style="animation-delay:1s;">DeepSeek v3.2</span>
+                    <span class="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-full text-sm text-gray-300 animate-float" style="animation-delay:1.2s;">MiniMax 2.1</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-20 px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-4">Pick Your <span class="gradient-text">Plan</span></h2>
+                    <p class="text-gray-400 max-w-xl mx-auto mb-6">All plans at flat 50% off. No GST. No hidden fees.</p>
+                    
+                    <!-- Currency Toggle -->
+                    <div class="inline-flex items-center gap-3 px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-full">
+                        <button id="btn-usd" class="px-4 py-1.5 rounded-full text-sm font-semibold bg-indigo-600 text-white transition-all">USD $</button>
+                        <button id="btn-inr" class="px-4 py-1.5 rounded-full text-sm font-semibold text-gray-400 hover:text-white transition-all">INR ₹</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="pricing-grid">
+                    <!-- Pro -->
+                    <div class="flip-card relative bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300" data-plan="Pro" data-usd-original="20" data-usd-discounted="10" data-inr-original="1892" data-inr-discounted="946" data-credits="1,000">
+                        <div class="flip-card-inner">
+                            <h3 class="text-xl font-bold text-white mb-1">Pro</h3>
+                            <p class="text-xs text-gray-500 mb-4">Kiro market price: <span class="original-price line-through">$20/month</span></p>
+                            <div class="mb-5">
+                                <div class="discounted-price text-4xl font-extrabold text-emerald-400">$10<span class="text-base font-normal text-gray-400">/mo</span></div>
+                                <span class="inline-block mt-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded text-emerald-400 text-xs font-bold">SAVE 50%</span>
+                            </div>
+                            <div class="border-t border-gray-800 pt-4 mb-4">
+                                <p class="text-sm font-semibold text-white mb-3">📦 credits/month: <span class="text-emerald-400">1,000</span></p>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-3">Everything included:</p>
+                            <ul class="space-y-2.5 text-sm text-gray-300">
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All premium AI models (Opus, Sonnet, Auto)</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>IDE + CLI + Web access</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Specs + Vibe mode</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>1:1 Google Meet setup</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>WhatsApp support</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pro+ (Popular) -->
+                    <div class="flip-card relative bg-gray-900/50 border-2 border-indigo-500 rounded-2xl p-8 card-hover transition-all duration-300 animate-pulse-glow" data-plan="Pro+" data-usd-original="40" data-usd-discounted="20" data-inr-original="3784" data-inr-discounted="1892" data-credits="2,000">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-indigo-600 rounded-full text-xs font-bold">MOST POPULAR</div>
+                        <div class="flip-card-inner">
+                            <h3 class="text-xl font-bold text-white mb-1">Pro+</h3>
+                            <p class="text-xs text-gray-500 mb-4">Kiro market price: <span class="original-price line-through">$40/month</span></p>
+                            <div class="mb-5">
+                                <div class="discounted-price text-4xl font-extrabold text-emerald-400">$20<span class="text-base font-normal text-gray-400">/mo</span></div>
+                                <span class="inline-block mt-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded text-emerald-400 text-xs font-bold">SAVE 50%</span>
+                            </div>
+                            <div class="border-t border-gray-800 pt-4 mb-4">
+                                <p class="text-sm font-semibold text-white mb-3">📦 credits/month: <span class="text-emerald-400">2,000</span></p>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-3">Everything included:</p>
+                            <ul class="space-y-2.5 text-sm text-gray-300">
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All premium AI models (Opus, Sonnet, Auto)</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>IDE + CLI + Web access</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Specs + Vibe mode</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>1:1 Google Meet setup</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Priority WhatsApp support</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pro Max -->
+                    <div class="flip-card relative bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300" data-plan="Pro Max" data-usd-original="100" data-usd-discounted="50" data-inr-original="9461" data-inr-discounted="4731" data-credits="5,000">
+                        <div class="flip-card-inner">
+                            <h3 class="text-xl font-bold text-white mb-1">Pro Max</h3>
+                            <p class="text-xs text-gray-500 mb-4">Kiro market price: <span class="original-price line-through">$100/month</span></p>
+                            <div class="mb-5">
+                                <div class="discounted-price text-4xl font-extrabold text-emerald-400">$50<span class="text-base font-normal text-gray-400">/mo</span></div>
+                                <span class="inline-block mt-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded text-emerald-400 text-xs font-bold">SAVE 50%</span>
+                            </div>
+                            <div class="border-t border-gray-800 pt-4 mb-4">
+                                <p class="text-sm font-semibold text-white mb-3">📦 credits/month: <span class="text-emerald-400">5,000</span></p>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-3">Everything included:</p>
+                            <ul class="space-y-2.5 text-sm text-gray-300">
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All premium AI models (Opus, Sonnet, Auto)</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>IDE + CLI + Web access</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Specs + Vibe mode</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>1:1 Google Meet setup</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>WhatsApp support</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Power -->
+                    <div class="flip-card relative bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300" data-plan="Power" data-usd-original="200" data-usd-discounted="100" data-inr-original="18922" data-inr-discounted="9461" data-credits="10,000">
+                        <div class="flip-card-inner">
+                            <h3 class="text-xl font-bold text-white mb-1">Power</h3>
+                            <p class="text-xs text-gray-500 mb-4">Kiro market price: <span class="original-price line-through">$200/month</span></p>
+                            <div class="mb-5">
+                                <div class="discounted-price text-4xl font-extrabold text-emerald-400">$100<span class="text-base font-normal text-gray-400">/mo</span></div>
+                                <span class="inline-block mt-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded text-emerald-400 text-xs font-bold">SAVE 50%</span>
+                            </div>
+                            <div class="border-t border-gray-800 pt-4 mb-4">
+                                <p class="text-sm font-semibold text-white mb-3">📦 credits/month: <span class="text-emerald-400">10,000</span></p>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-3">Everything included:</p>
+                            <ul class="space-y-2.5 text-sm text-gray-300">
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All premium AI models (Opus, Sonnet, Auto)</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>IDE + CLI + Web access</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Specs + Vibe mode</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>1:1 Google Meet setup</li>
+                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>WhatsApp support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-center text-gray-500 text-sm mt-8">* All prices without GST. You pay exactly what you see. No surprises.</p>
+            </div>
+        </section>
+
+        <!-- Trust Section -->
+        <section class="py-16 px-4 bg-gray-900/30">
+            <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <p class="text-emerald-300 font-bold">100% Working</p>
+                        <p class="text-gray-500 text-xs">Verified & trusted service</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-indigo-400" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+                        </div>
+                        <p class="text-indigo-300 font-bold">WhatsApp Support</p>
+                        <p class="text-gray-500 text-xs">Instant response</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="w-12 h-12 bg-purple-500/10 border border-purple-500/20 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-purple-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <p class="text-purple-300 font-bold">1:1 Meet Setup</p>
+                        <p class="text-gray-500 text-xs">Live walkthrough included</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Signup Form Section -->
+        <section id="signup" class="py-20 px-4">
+            <div class="max-w-md mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Get Started <span class="gradient-text">Now</span></h2>
+                    <p class="text-gray-400">Fill the form and connect with us on WhatsApp instantly.</p>
+                </div>
+
+                <form id="signup-form" novalidate class="bg-gray-900/50 border border-gray-800 rounded-2xl p-6 sm:p-8 space-y-5">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-300 mb-1.5">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required aria-required="true" placeholder="Your first name"
+                            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                        <span class="error-message text-xs text-red-400 mt-1 hidden" id="firstName-error"></span>
+                    </div>
+
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-300 mb-1.5">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required aria-required="true" placeholder="Your last name"
+                            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                        <span class="error-message text-xs text-red-400 mt-1 hidden" id="lastName-error"></span>
+                    </div>
+
+                    <div>
+                        <label for="emailId" class="block text-sm font-medium text-gray-300 mb-1.5">Email ID</label>
+                        <input type="email" id="emailId" name="emailId" required aria-required="true" placeholder="you@example.com"
+                            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                        <span class="error-message text-xs text-red-400 mt-1 hidden" id="emailId-error"></span>
+                    </div>
+
+                    <div>
+                        <label for="kiroPlan" class="block text-sm font-medium text-gray-300 mb-1.5">Select Plan</label>
+                        <select id="kiroPlan" name="kiroPlan" required aria-required="true"
+                            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                            <option value="" class="bg-gray-900">Choose a plan...</option>
+                            <option value="Pro — $10/month (1,000 credits)" class="bg-gray-900">Pro — $10/month</option>
+                            <option value="Pro+ — $20/month (2,000 credits)" class="bg-gray-900">Pro+ — $20/month</option>
+                            <option value="Pro Max — $50/month (5,000 credits)" class="bg-gray-900">Pro Max — $50/month</option>
+                            <option value="Power — $100/month (10,000 credits)" class="bg-gray-900">Power — $100/month</option>
+                        </select>
+                        <span class="error-message text-xs text-red-400 mt-1 hidden" id="kiroPlan-error"></span>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all hover:shadow-lg hover:shadow-emerald-500/25 hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        Submit & Chat on WhatsApp
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-8 text-center text-gray-500 text-sm">
+        <p>&copy; 2025 DevTools Pro. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
