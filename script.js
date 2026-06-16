@@ -58,6 +58,39 @@ document.addEventListener('DOMContentLoaded', () => {
   btnUSD.addEventListener('click', () => switchCurrency('usd'));
   btnINR.addEventListener('click', () => switchCurrency('inr'));
 
+  // ─── FORM CURRENCY TOGGLE ───
+  const formBtnUSD = document.getElementById('form-btn-usd');
+  const formBtnINR = document.getElementById('form-btn-inr');
+  const planOptions = document.querySelectorAll('#kiroPlan option[data-usd]');
+
+  function switchFormCurrency(currency) {
+    // Update button styles
+    if (currency === 'usd') {
+      formBtnUSD.classList.add('bg-indigo-600', 'text-white');
+      formBtnUSD.classList.remove('text-gray-400');
+      formBtnINR.classList.remove('bg-indigo-600', 'text-white');
+      formBtnINR.classList.add('text-gray-400');
+    } else {
+      formBtnINR.classList.add('bg-indigo-600', 'text-white');
+      formBtnINR.classList.remove('text-gray-400');
+      formBtnUSD.classList.remove('bg-indigo-600', 'text-white');
+      formBtnUSD.classList.add('text-gray-400');
+    }
+
+    // Update option text and values
+    planOptions.forEach(opt => {
+      const val = opt.dataset[currency];
+      opt.value = val;
+      opt.textContent = val.split(' (')[0]; // show just plan + price
+    });
+
+    // Reset selection
+    plan.value = '';
+  }
+
+  formBtnUSD.addEventListener('click', () => switchFormCurrency('usd'));
+  formBtnINR.addEventListener('click', () => switchFormCurrency('inr'));
+
   // ─── VALIDATION ───
   function validateEmail(value) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
