@@ -53,8 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const qrContainer = document.getElementById('qr-code-container');
       if (qrContainer && typeof QRCode !== 'undefined') {
         qrContainer.innerHTML = '';
-        QRCode.toCanvas(document.createElement('canvas'), upiString, { width: 208, margin: 1, color: { dark: '#000000', light: '#ffffff' } }, (err, canvas) => {
-          if (!err) { canvas.style.width = '100%'; canvas.style.height = '100%'; qrContainer.appendChild(canvas); }
+        new QRCode(qrContainer, {
+          text: upiString,
+          width: 200,
+          height: 200,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
         });
       }
       showStep(2);
