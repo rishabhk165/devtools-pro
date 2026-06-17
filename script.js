@@ -9,12 +9,14 @@ async function submitToGoogleSheets(payload) {
   try {
     const response = await fetch(GOOGLE_SHEETS_ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       signal: controller.signal,
+      redirect: 'follow',
     });
     if (!response.ok) {
       console.error('Sheets submission failed:', response.status);
+    } else {
+      console.log('Sheets submission successful');
     }
   } catch (error) {
     console.error('Sheets submission error:', error.message);
