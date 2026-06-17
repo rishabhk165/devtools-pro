@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevTools Pro — Premium AI Coding Subscriptions at 50% Off</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -481,8 +482,10 @@
                     <p class="text-sm text-gray-400 mb-4">Scan QR or pay via UPI to complete your purchase.</p>
                     
                     <div class="text-center mb-6">
-                        <div class="inline-block bg-white p-3 rounded-xl mb-4 shadow-lg overflow-hidden">
-                            <img src="qr-payment.png" alt="UPI QR Code" class="w-52 h-52 object-cover mx-auto rounded" style="object-position: center 30%; transform: scale(1.4);">
+                        <div class="inline-block bg-white p-4 rounded-xl mb-4 shadow-lg">
+                            <div id="qr-code-container" class="w-52 h-52 mx-auto flex items-center justify-center">
+                                <p class="text-gray-400 text-xs">Generating QR...</p>
+                            </div>
                         </div>
                         
                         <p class="text-gray-500 text-xs mb-4">— OR pay directly from your app —</p>

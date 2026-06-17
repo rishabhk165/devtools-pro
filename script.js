@@ -84,9 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.getElementById('payment-amount').textContent = 'Amount: ' + displayAmount;
     
-    // Set UPI deep link with amount pre-filled (always INR for UPI)
-    const upiLink = `upi://pay?pa=9019879108@kotakbank&pn=DevTools%20Pro&am=${amountINR}&cu=INR&tn=${encodeURIComponent('DevTools Pro - ' + selectedPlan.split(' — ')[0])}`;
-    document.getElementById('upi-pay-link').href = upiLink;
+    // Generate QR code dynamically with UPI link
+    const upiString = `upi://pay?pa=9019879108@kotakbank&pn=DevTools%20Pro&am=${amountINR}&cu=INR&tn=${encodeURIComponent('DevTools Pro - ' + selectedPlan.split(' — ')[0])}`;
+    document.getElementById('upi-pay-link').href = upiString;
+    
+    // Render QR
+    const qrContainer = document.getElementById('qr-code-container');
+    qrContainer.innerHTML = '';
+    QRCode.toCanvas(document.createElement('canvas'), upiString, { width: 208, margin: 1, color: { dark: '#000000', light: '#ffffff' } }, (err, canvas) => {
+      if (!err) {
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        qrContainer.appendChild(canvas);
+      }
+    });
     
     showStep(2);
   });
