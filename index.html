@@ -36,6 +36,12 @@
         .flip-card { perspective: 1000px; }
         .flip-card-inner { transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card-inner.flipping { animation: flip 0.6s ease-in-out; }
+        .logo-animated { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; animation: logoPulse 3s ease-in-out infinite; box-shadow: 0 0 20px rgba(99,102,241,0.3); }
+        .logo-icon svg { width: 20px; height: 20px; color: white; }
+        .logo-text { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa, #818cf8); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: logoShimmer 4s ease-in-out infinite; }
+        @keyframes logoPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(99,102,241,0.3); } 50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(99,102,241,0.5); } }
+        @keyframes logoShimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans antialiased overflow-x-hidden">
@@ -43,7 +49,12 @@
     <!-- Navigation -->
     <header class="fixed top-0 w-full z-50 glass border-b border-gray-800/50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            <a href="#" class="text-2xl font-bold gradient-text">DevTools Pro</a>
+            <a href="#" class="logo-animated">
+                <span class="logo-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                </span>
+                <span class="logo-text">DevTools Pro</span>
+            </a>
             <nav class="hidden md:flex items-center gap-6">
                 <a href="#what" class="text-gray-400 hover:text-indigo-400 transition-colors text-sm font-medium">What You Get</a>
                 <a href="#pricing" class="text-gray-400 hover:text-indigo-400 transition-colors text-sm font-medium">Pricing</a>
