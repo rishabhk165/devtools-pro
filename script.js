@@ -1,5 +1,27 @@
 // ─── CONFIGURATION ───
 const WHATSAPP_NUMBER = '919019879108';
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz57jo7Ye2-p3_WcTIIJlCrHU1z6W2NLDW1wb4N-FzwAU0D_WBaSnGHqy9r6TDDg9EUEw/exec';
+
+// ─── GOOGLE SHEETS SUBMISSION ───
+async function submitToGoogleSheets(payload) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  try {
+    const response = await fetch(GOOGLE_SHEETS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      console.error('Sheets submission failed:', response.status);
+    }
+  } catch (error) {
+    console.error('Sheets submission error:', error.message);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const step1 = document.getElementById('step-1');
@@ -134,6 +156,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const fields = [firstName, lastName, email, utr];
       const isValid = fields.every(f => validateField(f));
       if (isValid) {
+        // Build submission payload and send to Google Sheets (fire-and-forget)
+        const payload = {
+          firstName: firstName.value.trim(),
+          lastName: lastName.value.trim(),
+          email: email.value.trim(),
+          selectedPlan: selectedPlan,
+          utrId: utr.value.trim(),
+          submissionTimestamp: new Date().toISOString()
+        };
+        submitToGoogleSheets(payload);
+
         const message = `Hi! I've made the payment and want to set up my subscription.\n\nFirst Name: ${firstName.value.trim()}\nLast Name: ${lastName.value.trim()}\nEmail: ${email.value.trim()}\nSelected Plan: ${selectedPlan}\nUTR/Transaction ID: ${utr.value.trim()}\n\nPlease verify and schedule my 1:1 Google Meet setup. Thanks!`;
         window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`, '_blank');
         showStep(4);
