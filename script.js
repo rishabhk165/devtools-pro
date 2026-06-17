@@ -170,6 +170,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ─── FAQ ACCORDION ───
+  document.querySelectorAll('.faq-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = btn.nextElementSibling;
+      const icon = btn.querySelector('.faq-icon');
+      const isOpen = !answer.classList.contains('hidden');
+
+      // Close all
+      document.querySelectorAll('.faq-answer').forEach(a => a.classList.add('hidden'));
+      document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('rotate-180'));
+
+      // Open clicked one (if it was closed)
+      if (!isOpen) {
+        answer.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      }
+    });
+  });
+
   // ─── SCROLL REVEAL ANIMATION ───
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
