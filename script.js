@@ -4,7 +4,7 @@ const WHATSAPP_NUMBER = '919019879108';
 // Backend API endpoint (replace with your deployed backend URL)
 // For local development: http://localhost:3000
 // For production: https://your-app.onrender.com
-const API_ENDPOINT = 'https://your-app.onrender.com/api/submit';
+const API_ENDPOINT = 'https://devtools-pro.onrender.com/api/submit';
 
 // ─── BACKEND API SUBMISSION ───
 async function submitToBackend(payload) {
