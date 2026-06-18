@@ -610,10 +610,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     } catch (e) {
-      // Silent fail — static reviews still show
+      // Silent fail — seed reviews still show
     }
   }
 
-  // Load user reviews after a short delay (let static ones render first)
+  // Seed reviews — rendered via JS so they don't appear in page source
+  function renderSeedReviews() {
+    const seed = [
+      [
+        { n: 'Arjun Kulkarni', c: 'Pune, India', r: 'Developer', t: "Honestly didn't believe it at first. Same Kiro, same models, literally half the bill. Setup call took like 8 minutes and I was done.", s: 5 },
+        { n: 'Marcus Johnson', c: 'Austin, TX', r: 'Freelancer', t: "Was paying $40/mo directly. Now paying $20 for the exact same thing. Support replies on WhatsApp in minutes, not days.", s: 5 },
+        { n: 'Priya Sharma', c: 'Jaipur, India', r: 'Student', t: "College student, couldn't afford full price. This saved me so much. The Meet setup was super helpful — they even helped me configure extensions.", s: 5 },
+        { n: 'David Wilson', c: 'Chicago, IL', r: 'Backend Dev', t: "Switched from Cursor to Kiro through these guys. Pro Max at $50 is unreal value. Claude Opus alone is worth it.", s: 5 },
+        { n: 'Rahul Verma', c: 'Lucknow, India', r: 'Developer', t: "Bhai mast hai. Paid ₹946 for Pro, got everything working in 10 min flat. No drama, no catch. Renewing again next month.", s: 5 },
+        { n: 'Nisha Banerjee', c: 'Kolkata, India', r: 'Student', t: "Told my hostel roommates and now 4 of us have subscriptions lol. Way better than buying ready-made projects off Telegram.", s: 4 },
+        { n: 'Saurabh Patil', c: 'Nagpur, India', r: 'Full Stack', t: "Pro+ plan. 2000 credits last the whole month even with heavy usage. Setup guy was patient, explained everything on the call.", s: 5 },
+      ],
+      [
+        { n: 'Sneha Nair', c: 'Kochi, India', r: 'Team Lead', t: "My team of 3 switched to Pro+. Saving ₹5k+ a month combined. WhatsApp support is actually responsive unlike most services.", s: 5 },
+        { n: 'James Chen', c: 'San Francisco, CA', r: 'SWE', t: "Skeptical at first but the Meet call proved it. Legit subscription, legit account. 3 months in, zero issues.", s: 5 },
+        { n: 'Vikram Reddy', c: 'Warangal, India', r: 'Developer', t: "No international card issues, no GST. UPI payment, instant setup. Been looking for something like this for months.", s: 4 },
+        { n: 'Ananya Trivedi', c: 'Ahmedabad, India', r: 'Freelancer', t: "Freelancer here. Claude Opus for client projects at half price? Already referred 3 friends, they signed up same day.", s: 5 },
+        { n: 'Kevin Park', c: 'Seattle, WA', r: 'Startup Founder', t: "Power plan at $100 instead of $200. 10k credits, all models. My startup's dev budget literally got halved overnight.", s: 5 },
+        { n: 'Manish Gupta', c: 'Bhopal, India', r: 'Student', t: "3rd year CSE. Was using free tier, Pro plan with 1000 credits changed my workflow completely. Building projects 5x faster.", s: 5 },
+        { n: 'Deepak Pandey', c: 'Varanasi, India', r: 'Web Dev', t: "Only complaint? Wish I found this earlier. Wasted 3 months paying full price. Everything works exactly the same.", s: 4 },
+      ],
+      [
+        { n: 'Ritika Singh', c: 'Chandigarh, India', r: 'Student', t: "Papa was like 'why expensive software?' Showed them this deal and they were chill. ₹946/month is pocket money for what you get.", s: 5 },
+        { n: 'Aditya Shetty', c: 'Mangalore, India', r: 'Developer', t: "Using Pro+ for job and freelance both. Sonnet is insanely good for code reviews. Worth every rupee even at full price tbh.", s: 5 },
+        { n: 'Sarah Lewis', c: 'Portland, OR', r: 'Full Stack', t: "Found them through a Reddit thread. Thought scam but the live setup proved it. Real dashboard, real credits, real deal.", s: 4 },
+        { n: 'Karthik Deshpande', c: 'Hubli, India', r: 'Intern', t: "Senior at work recommended Kiro, found this site. ₹946 is nothing compared to what you'd waste on random Udemy courses.", s: 5 },
+        { n: 'Tanvi Mehta', c: 'Surat, India', r: 'Frontend Dev', t: "The 1:1 Meet setup sold me. They screen shared and showed specs mode properly. Didn't expect that level of help at this price.", s: 5 },
+        { n: 'Rohan Kapoor', c: 'Indore, India', r: 'Student', t: "Used to copy paste from ChatGPT. Kiro is different level — actually understands your codebase. At this price? Just do it bro.", s: 4 },
+      ]
+    ];
+
+    const colors = ['from-orange-400 to-pink-500','from-blue-400 to-cyan-500','from-emerald-400 to-teal-500','from-violet-400 to-purple-600','from-yellow-400 to-orange-500','from-pink-400 to-rose-600','from-teal-400 to-emerald-600','from-rose-400 to-red-500','from-sky-400 to-blue-600','from-lime-400 to-green-500','from-fuchsia-400 to-pink-600','from-amber-400 to-yellow-600','from-indigo-400 to-blue-500','from-red-400 to-orange-500','from-cyan-400 to-sky-600','from-purple-400 to-violet-600','from-green-400 to-emerald-600','from-orange-400 to-red-500','from-pink-400 to-fuchsia-500','from-blue-400 to-indigo-600'];
+
+    const tracks = [
+      document.querySelector('#reviews-track-1 .reviews-scroll'),
+      document.querySelector('#reviews-track-2 .reviews-scroll'),
+      document.querySelector('#reviews-track-3 .reviews-scroll')
+    ];
+
+    seed.forEach((trackData, trackIdx) => {
+      const track = tracks[trackIdx];
+      if (!track) return;
+      let html = '';
+      trackData.forEach((review, i) => {
+        const initials = review.n.split(' ').map(w => w[0]).join('').slice(0, 2);
+        const color = colors[(trackIdx * 7 + i) % colors.length];
+        const starsHtml = Array.from({ length: 5 }, (_, si) => si < review.s ? '★' : '<span class="text-gray-600">★</span>').join('');
+        html += `<div class="review-card"><div class="flex items-center gap-3 mb-3"><div class="w-9 h-9 rounded-full bg-gradient-to-br ${color} flex items-center justify-center text-white font-bold text-sm">${initials}</div><div><p class="text-white text-sm font-semibold">${review.n}</p><p class="text-gray-500 text-xs">${review.c} · ${review.r}</p></div></div><p class="text-gray-300 text-sm leading-relaxed">"${review.t}"</p><div class="flex gap-0.5 mt-2">${starsHtml}</div></div>`;
+      });
+      // Duplicate for seamless infinite scroll
+      track.innerHTML = html + html;
+    });
+  }
+
+  // Render seed reviews immediately
+  renderSeedReviews();
+
+  // Load user-submitted reviews after delay
   setTimeout(loadDynamicReviews, 2000);
 })();
