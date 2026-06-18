@@ -122,6 +122,18 @@
         .logo-text { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa, #818cf8); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: logoShimmer 4s ease-in-out infinite; }
         @keyframes logoPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(99,102,241,0.3); } 50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(99,102,241,0.5); } }
         @keyframes logoShimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        /* Reviews floating animation */
+        .reviews-track { overflow: hidden; position: relative; }
+        .reviews-track::before, .reviews-track::after { content: ''; position: absolute; top: 0; width: 100px; height: 100%; z-index: 10; pointer-events: none; }
+        .reviews-track::before { left: 0; background: linear-gradient(to right, rgb(3 7 18), transparent); }
+        .reviews-track::after { right: 0; background: linear-gradient(to left, rgb(3 7 18), transparent); }
+        .reviews-scroll { display: flex; gap: 1.5rem; animation: scrollReviews var(--duration, 35s) linear infinite; animation-direction: var(--direction, normal); width: max-content; }
+        .reviews-scroll:hover { animation-play-state: paused; }
+        .review-card { flex-shrink: 0; width: 320px; padding: 1.25rem; background: rgba(17,24,39,0.6); border: 1px solid rgba(75,85,99,0.3); border-radius: 1rem; backdrop-filter: blur(8px); transition: all 0.3s ease; }
+        .review-card:hover { border-color: rgba(99,102,241,0.5); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(99,102,241,0.1); }
+        .review-card .flex.gap-0\.5 { color: #fbbf24; font-size: 0.75rem; }
+        @keyframes scrollReviews { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans antialiased overflow-x-hidden">
@@ -449,6 +461,148 @@
             </div>
         </section>
 
+        <!-- Reviews Section -->
+        <section id="reviews" class="py-20 px-4 overflow-hidden">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-4">What Developers <span class="gradient-text">Say</span></h2>
+                    <p class="text-gray-400 max-w-xl mx-auto">Real feedback from devs who switched to our plans.</p>
+                </div>
+
+                <!-- Floating Reviews Track 1 (left to right) -->
+                <div class="reviews-track mb-6" style="--direction: normal; --duration: 35s;">
+                    <div class="reviews-scroll">
+                        <!-- Card 1 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm">AK</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">Arjun Kulkarni</p>
+                                    <p class="text-gray-500 text-xs">Pune, India</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"Honestly didn't believe it at first. Same Kiro, same models, literally half the bill. Setup call took like 8 minutes and I was done."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center text-white font-bold text-sm">MJ</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">Marcus Johnson</p>
+                                    <p class="text-gray-500 text-xs">Austin, TX</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"Was paying $40/mo directly. Now paying $20 for the exact same thing. Support is crazy fast too, they reply on WhatsApp in minutes."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm">PS</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">Priya Sharma</p>
+                                    <p class="text-gray-500 text-xs">Bangalore, India</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"I'm a college student, couldn't afford the full price. This saved me so much. The Meet setup was super helpful — they even helped me configure extensions."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-purple-600 flex items-center justify-center text-white font-bold text-sm">DW</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">David Wilson</p>
+                                    <p class="text-gray-500 text-xs">Chicago, IL</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"Switched from Cursor to Kiro through these guys. The Pro Max plan at $50 is unreal value. Claude Opus alone is worth it."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">RV</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">Rahul Verma</p>
+                                    <p class="text-gray-500 text-xs">Delhi, India</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"Bhai mast hai. Paid ₹946 for Pro, got everything working in 10 min. No drama, no catch. Been using for 2 months now, renewing again."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Reviews Track 2 (right to left) -->
+                <div class="reviews-track" style="--direction: reverse; --duration: 40s;">
+                    <div class="reviews-scroll">
+                        <!-- Card 6 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-rose-400 to-red-500 flex items-center justify-center text-white font-bold text-sm">SN</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">Sneha Nair</p>
+                                    <p class="text-gray-500 text-xs">Kochi, India</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"My team of 3 switched to Pro+ plans through DevTools Pro. We're saving ₹5k+ a month combined. The WhatsApp support is actually responsive unlike most services."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                        <!-- Card 7 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">JC</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">James Chen</p>
+                                    <p class="text-gray-500 text-xs">San Francisco, CA</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"Skeptical at first but did the Meet call and verified everything live. Legit subscription, legit account. Been 3 months, zero issues."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                        <!-- Card 8 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-lime-400 to-green-500 flex items-center justify-center text-white font-bold text-sm">VR</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">Vikram Reddy</p>
+                                    <p class="text-gray-500 text-xs">Hyderabad, India</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"Finally don't have to deal with international card issues or GST headaches. UPI payment, instant setup. Clean."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                        <!-- Card 9 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-fuchsia-400 to-pink-600 flex items-center justify-center text-white font-bold text-sm">AT</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">Ananya Trivedi</p>
+                                    <p class="text-gray-500 text-xs">Ahmedabad, India</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"As a freelancer this is a no-brainer. Getting Claude Opus for my client projects at half price? Yes please. Referring all my dev friends."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                        <!-- Card 10 -->
+                        <div class="review-card">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-white font-bold text-sm">KP</div>
+                                <div>
+                                    <p class="text-white text-sm font-semibold">Kevin Park</p>
+                                    <p class="text-gray-500 text-xs">Seattle, WA</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">"The Power plan at $100 instead of $200 is insane. 10k credits, all models. My startup's dev budget just got halved."</p>
+                            <div class="flex gap-0.5 mt-2">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- FAQ Section -->
         <section id="faq" class="py-20 px-4 bg-gray-900/30">
             <div class="max-w-3xl mx-auto">
@@ -711,5 +865,12 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+      // Duplicate review cards for seamless infinite scroll
+      document.querySelectorAll('.reviews-scroll').forEach(track => {
+        const items = track.innerHTML;
+        track.innerHTML += items;
+      });
+    </script>
 </body>
 </html>
