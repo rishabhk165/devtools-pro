@@ -216,5 +216,6 @@ module.exports = {
   getSubmissionById,
   getSubmissionByUTR,
   updateSubmissionStatus,
-  getStats
+  getStats,
+  getClient
 };

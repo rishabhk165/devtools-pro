@@ -14,8 +14,9 @@ globalThis.fetch = require('cross-fetch');
 
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
-const { initDB, addSubmission, getAllSubmissions, getSubmissionByUTR, getStats } = require('./db');
+const { initDB, addSubmission, getAllSubmissions, getSubmissionByUTR, getStats, getClient } = require('./db');
 const { generateSetupMessage, generateQuickReply } = require('./meet-service');
 const { createPaymentRecord, submitUTR, getPaymentStatus, verifyPayment, getPendingPayments, getUTRConfidence } = require('./payment-verify');
 
@@ -27,8 +28,23 @@ app.use(express.json());
 app.use(cors({
   origin: process.env.FRONTEND_URL || '*',
   methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
+  allowedHeaders: ['Content-Type', 'x-admin-key']
 }));
+
+// Rate limiting
+const generalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100, message: { status: 'error', message: 'Too many requests, try again later' } });
+const submitLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: { status: 'error', message: 'Too many submissions, try again later' } });
+const reviewLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5, message: { status: 'error', message: 'Too many reviews, try again later' } });
+app.use('/api/', generalLimiter);
+
+// Admin auth middleware
+function requireAdmin(req, res, next) {
+  const adminKey = req.headers['x-admin-key'] || req.query.key;
+  if (adminKey !== process.env.ADMIN_KEY) {
+    return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+  }
+  next();
+}
 
 // Initialize database on startup
 initDB().catch(err => {
@@ -48,7 +64,7 @@ app.get('/', (req, res) => {
 
 // ─── POST /api/submit ───
 // Main endpoint: receives user form data, stores in DB, returns Meet link + message
-app.post('/api/submit', async (req, res) => {
+app.post('/api/submit', submitLimiter, async (req, res) => {
   try {
     const { firstName, lastName, email, selectedPlan, utrId, submissionTimestamp } = req.body;
 
@@ -137,7 +153,7 @@ app.post('/api/submit', async (req, res) => {
 
 // ─── GET /api/submissions ───
 // Admin endpoint: get all submissions
-app.get('/api/submissions', async (req, res) => {
+app.get('/api/submissions', requireAdmin, async (req, res) => {
   try {
     const submissions = await getAllSubmissions();
     res.json({
@@ -166,7 +182,7 @@ app.get('/api/check-utr/:utrId', async (req, res) => {
 
 // ─── GET /api/stats ───
 // Get submission statistics
-app.get('/api/stats', async (req, res) => {
+app.get('/api/stats', requireAdmin, async (req, res) => {
   try {
     const stats = await getStats();
     res.json({ status: 'success', data: stats });
@@ -220,17 +236,14 @@ app.post('/api/payment/submit-utr', async (req, res) => {
     // Calculate UTR confidence score
     const confidence = getUTRConfidence(utrId.trim());
 
-    // If confidence is very high (standard 12-digit UTR), auto-verify after short delay
+    // Auto-verify high-confidence UTRs immediately (standard 12-digit format)
     if (confidence >= 70) {
-      // Auto-verify high-confidence UTRs after 5 seconds (simulates verification)
-      setTimeout(async () => {
-        try {
-          await verifyPayment(paymentId, process.env.ADMIN_KEY);
-          console.log(`✅ Auto-verified payment ${paymentId} (UTR: ${utrId}, confidence: ${confidence})`);
-        } catch (e) {
-          console.error('Auto-verify failed:', e.message);
-        }
-      }, 5000);
+      try {
+        await verifyPayment(paymentId, process.env.ADMIN_KEY);
+        console.log(`✅ Auto-verified payment ${paymentId} (UTR: ${utrId}, confidence: ${confidence})`);
+      } catch (e) {
+        console.error('Auto-verify failed:', e.message);
+      }
     }
 
     res.json({
@@ -280,12 +293,11 @@ app.post('/api/payment/verify/:paymentId', async (req, res) => {
 
 // ─── GET /api/payment/pending ───
 // Admin: get all payments waiting for verification
-app.get('/api/payment/pending', async (req, res) => {
+app.get('/api/payment/pending', requireAdmin, async (req, res) => {
   try {
-    const adminKey = req.headers['x-admin-key'] || req.query.key;
-    const result = await getPendingPayments(adminKey);
+    const result = await getPendingPayments(process.env.ADMIN_KEY);
     if (!result.success) {
-      return res.status(401).json({ status: 'error', message: result.message });
+      return res.status(500).json({ status: 'error', message: result.message });
     }
     res.json({ status: 'success', count: result.payments.length, data: result.payments });
   } catch (error) {
@@ -299,7 +311,7 @@ app.get('/api/payment/pending', async (req, res) => {
 
 // ─── POST /api/reviews ───
 // Submit a new review
-app.post('/api/reviews', async (req, res) => {
+app.post('/api/reviews', reviewLimiter, async (req, res) => {
   try {
     const { name, city, role, reviewText, rating } = req.body;
     if (!name || !city || !reviewText) {
@@ -312,9 +324,7 @@ app.post('/api/reviews', async (req, res) => {
       return res.status(400).json({ status: 'error', message: 'Review must be under 200 characters' });
     }
 
-    const { createClient } = require('@supabase/supabase-js');
-    const client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-
+    const client = getClient();
     const { data, error } = await client
       .from('reviews')
       .insert({ name: name.trim(), city: city.trim(), role: role || 'Developer', review_text: reviewText.trim(), rating: parseInt(rating) })
@@ -337,8 +347,7 @@ app.post('/api/reviews', async (req, res) => {
 app.get('/api/reviews', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 20;
-    const { createClient } = require('@supabase/supabase-js');
-    const client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+    const client = getClient();
 
     const { data, error } = await client
       .from('reviews')

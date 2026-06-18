@@ -24,18 +24,15 @@ function getMeetLinks() {
   return links;
 }
 
-// Track which link to assign next (round-robin)
-let currentLinkIndex = 0;
-
+// Track which link to assign next (random to survive server restarts)
 /**
  * Get the next available Google Meet link
- * Uses round-robin to distribute across available links
+ * Uses random selection to avoid always assigning link #1 after cold starts
  */
 function getNextMeetLink() {
   const links = getMeetLinks();
-  const link = links[currentLinkIndex % links.length];
-  currentLinkIndex++;
-  return link;
+  const randomIndex = Math.floor(Math.random() * links.length);
+  return links[randomIndex];
 }
 
 /**

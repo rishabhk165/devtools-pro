@@ -16,8 +16,12 @@
 
 const { createClient } = require('@supabase/supabase-js');
 
+let _client;
 function getClient() {
-  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+  if (!_client) {
+    _client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+  }
+  return _client;
 }
 
 /**
