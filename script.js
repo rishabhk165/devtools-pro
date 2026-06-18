@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const charCount = document.getElementById('reviewCharCount');
   const reviewText = document.getElementById('reviewText');
   const starRating = document.getElementById('star-rating');
-  let selectedRating = 5;
+  let selectedRating = 0; // Start with no stars selected
 
   if (!reviewForm) return;
 
@@ -438,31 +438,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Star rating interactive
+  // Star rating interactive — starts empty
   if (starRating) {
     const stars = starRating.querySelectorAll('[data-star]');
+    const ratingLabel = document.getElementById('rating-label');
+    const labels = ['', 'Not great', 'Okay', 'Good', 'Great!', 'Amazing!'];
+
     stars.forEach(star => {
       star.addEventListener('click', () => {
         selectedRating = parseInt(star.dataset.star);
-        stars.forEach(s => {
-          s.classList.toggle('text-yellow-400', parseInt(s.dataset.star) <= selectedRating);
-          s.classList.toggle('text-gray-600', parseInt(s.dataset.star) > selectedRating);
-        });
+        updateStars(selectedRating);
+        if (ratingLabel) { ratingLabel.textContent = labels[selectedRating]; ratingLabel.classList.remove('text-gray-500'); ratingLabel.classList.add('text-yellow-400'); }
       });
       star.addEventListener('mouseenter', () => {
         const hoverVal = parseInt(star.dataset.star);
         stars.forEach(s => {
-          s.classList.toggle('text-yellow-400', parseInt(s.dataset.star) <= hoverVal);
-          s.classList.toggle('text-gray-600', parseInt(s.dataset.star) > hoverVal);
+          const sVal = parseInt(s.dataset.star);
+          s.classList.toggle('text-yellow-400', sVal <= hoverVal);
+          s.classList.toggle('text-gray-700', sVal > hoverVal);
+          s.style.transform = sVal <= hoverVal ? 'scale(1.2)' : 'scale(1)';
         });
       });
     });
     starRating.addEventListener('mouseleave', () => {
-      stars.forEach(s => {
-        s.classList.toggle('text-yellow-400', parseInt(s.dataset.star) <= selectedRating);
-        s.classList.toggle('text-gray-600', parseInt(s.dataset.star) > selectedRating);
-      });
+      updateStars(selectedRating);
+      stars.forEach(s => { s.style.transform = 'scale(1)'; });
     });
+
+    function updateStars(rating) {
+      stars.forEach(s => {
+        const sVal = parseInt(s.dataset.star);
+        s.classList.toggle('text-yellow-400', sVal <= rating);
+        s.classList.toggle('text-gray-700', sVal > rating);
+      });
+    }
   }
 
   // Submit review
@@ -474,14 +483,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = reviewText.value.trim();
     const successEl = document.getElementById('review-success');
     const errorEl = document.getElementById('review-error');
+    const animEl = document.getElementById('review-success-animation');
+    const submitBtn = document.getElementById('review-submit-btn');
 
     if (successEl) successEl.classList.add('hidden');
     if (errorEl) errorEl.classList.add('hidden');
+    if (animEl) { animEl.classList.add('hidden'); animEl.innerHTML = ''; }
 
     if (!name || !city || !text) {
       if (errorEl) { errorEl.textContent = 'Please fill all fields'; errorEl.classList.remove('hidden'); }
       return;
     }
+    if (selectedRating === 0) {
+      if (errorEl) { errorEl.textContent = 'Please select a star rating'; errorEl.classList.remove('hidden'); }
+      return;
+    }
+
+    // Loading state
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<svg class="animate-spin w-4 h-4 mr-2 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Submitting...'; }
 
     try {
       const response = await fetch(`${API_BASE}/api/reviews`, {
@@ -492,23 +511,49 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
 
       if (data.status === 'success') {
-        if (successEl) successEl.classList.remove('hidden');
+        // Show glowing 3D stars burst animation
+        showSuccessAnimation(animEl, selectedRating);
+
         reviewForm.reset();
         if (charCount) charCount.textContent = '0';
-        selectedRating = 5;
+        const ratingLabel = document.getElementById('rating-label');
+        if (ratingLabel) { ratingLabel.textContent = ''; ratingLabel.classList.remove('text-yellow-400'); }
+        const prevRating = selectedRating;
+        selectedRating = 0;
         if (starRating) {
-          starRating.querySelectorAll('[data-star]').forEach(s => s.classList.add('text-yellow-400'));
-          starRating.querySelectorAll('[data-star]').forEach(s => s.classList.remove('text-gray-600'));
+          starRating.querySelectorAll('[data-star]').forEach(s => {
+            s.classList.remove('text-yellow-400');
+            s.classList.add('text-gray-700');
+          });
         }
         // Inject the new review card into track 1
-        injectNewReviewCard({ name, city, role, text, rating: selectedRating });
+        injectNewReviewCard({ name, city, role, text, rating: prevRating });
       } else {
         if (errorEl) { errorEl.textContent = data.message || 'Something went wrong'; errorEl.classList.remove('hidden'); }
       }
     } catch (err) {
       if (errorEl) { errorEl.textContent = 'Could not connect to server'; errorEl.classList.remove('hidden'); }
     }
+
+    // Reset button
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = 'Submit Review ✨'; }
   });
+
+  // Glowing 3D stars burst animation on success
+  function showSuccessAnimation(container, rating) {
+    if (!container) return;
+    const starsHtml = Array.from({ length: rating }, () => '<span>★</span>').join('');
+    container.innerHTML = `
+      <div class="review-success-overlay">
+        <div class="review-stars-burst">${starsHtml}</div>
+        <p class="thank-you-text">Thank you for your feedback!</p>
+        <p class="text-gray-400 text-xs mt-1" style="animation: successFadeIn 0.5s ease-out 1s both;">Your review is now live above ↑</p>
+      </div>
+    `;
+    container.classList.remove('hidden');
+    // Auto-hide after 4 seconds
+    setTimeout(() => { container.classList.add('hidden'); container.innerHTML = ''; }, 4500);
+  }
 
   // Inject new card into the first reviews track
   function injectNewReviewCard({ name, city, role, text, rating }) {
