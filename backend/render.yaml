@@ -1,0 +1,26 @@
+# Render.com deployment configuration
+# Connect your GitHub repo and this will auto-deploy
+services:
+  - type: web
+    name: devtools-pro-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: MEET_LINK_1
+        sync: false
+      - key: MEET_LINK_2
+        sync: false
+      - key: MEET_LINK_3
+        sync: false
+      - key: WHATSAPP_NUMBER
+        value: "919019879108"
+      - key: FRONTEND_URL
+        sync: false

@@ -1,25 +1,37 @@
 // ─── CONFIGURATION ───
 const WHATSAPP_NUMBER = '919019879108';
-const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz57jo7Ye2-p3_WcTIIJlCrHU1z6W2NLDW1wb4N-FzwAU0D_WBaSnGHqy9r6TDDg9EUEw/exec';
 
-// ─── GOOGLE SHEETS SUBMISSION ───
-async function submitToGoogleSheets(payload) {
+// Backend API endpoint (replace with your deployed backend URL)
+// For local development: http://localhost:3000
+// For production: https://your-app.onrender.com
+const API_ENDPOINT = 'https://your-app.onrender.com/api/submit';
+
+// ─── BACKEND API SUBMISSION ───
+async function submitToBackend(payload) {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
   try {
-    const response = await fetch(GOOGLE_SHEETS_ENDPOINT, {
+    const response = await fetch(API_ENDPOINT, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       signal: controller.signal,
-      redirect: 'follow',
     });
-    if (!response.ok) {
-      console.error('Sheets submission failed:', response.status);
+    const data = await response.json();
+
+    if (response.ok && data.status === 'success') {
+      console.log('✅ Backend submission successful');
+      return { success: true, data: data.data };
+    } else if (data.status === 'duplicate') {
+      console.warn('⚠️ Duplicate UTR detected');
+      return { success: false, error: 'duplicate', message: data.message };
     } else {
-      console.log('Sheets submission successful');
+      console.error('❌ Backend submission failed:', data.message);
+      return { success: false, error: 'failed', message: data.message };
     }
   } catch (error) {
-    console.error('Sheets submission error:', error.message);
+    console.error('❌ Backend submission error:', error.message);
+    return { success: false, error: 'network', message: 'Could not reach server' };
   } finally {
     clearTimeout(timeoutId);
   }
@@ -147,9 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
     clearError(field); return true;
   }
 
-  // ─── FORM SUBMIT → WHATSAPP ───
+  // ─── FORM SUBMIT → BACKEND + WHATSAPP WITH MEET LINK ───
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const firstName = document.getElementById('firstName');
       const lastName = document.getElementById('lastName');
@@ -157,8 +169,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const utr = document.getElementById('utrId');
       const fields = [firstName, lastName, email, utr];
       const isValid = fields.every(f => validateField(f));
+
       if (isValid) {
-        // Build submission payload and send to Google Sheets (fire-and-forget)
+        // Show loading state on submit button
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<svg class="animate-spin w-5 h-5 mr-2 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Processing...';
+        }
+
+        // Build submission payload
         const payload = {
           firstName: firstName.value.trim(),
           lastName: lastName.value.trim(),
@@ -167,11 +188,44 @@ document.addEventListener('DOMContentLoaded', () => {
           utrId: utr.value.trim(),
           submissionTimestamp: new Date().toISOString()
         };
-        submitToGoogleSheets(payload);
 
-        const message = `Hi! I've made the payment and want to set up my subscription.\n\nFirst Name: ${firstName.value.trim()}\nLast Name: ${lastName.value.trim()}\nEmail: ${email.value.trim()}\nSelected Plan: ${selectedPlan}\nUTR/Transaction ID: ${utr.value.trim()}\n\nPlease verify and schedule my 1:1 Google Meet setup. Thanks!`;
-        window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`, '_blank');
-        showStep(4);
+        // Submit to backend API
+        const result = await submitToBackend(payload);
+
+        if (result.success && result.data) {
+          // Backend returned Meet link and WhatsApp message
+          // Open WhatsApp with the enhanced message (includes Meet link + team note)
+          window.open(result.data.whatsappUrl, '_blank');
+          showStep(4);
+
+          // Update success step with Meet link info
+          const successContent = document.getElementById('step-success');
+          if (successContent) {
+            const meetInfoEl = successContent.querySelector('.meet-link-info');
+            if (meetInfoEl) {
+              meetInfoEl.innerHTML = `
+                <div class="mt-4 p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-xl">
+                  <p class="text-indigo-300 font-semibold mb-2">🎥 Your Google Meet Setup Link:</p>
+                  <a href="${result.data.meetLink}" target="_blank" class="text-indigo-400 hover:text-indigo-300 underline break-all">${result.data.meetLink}</a>
+                  <p class="text-gray-400 text-sm mt-2">⏰ Our team will join within 5 minutes for your setup.</p>
+                </div>
+              `;
+            }
+          }
+        } else if (result.error === 'duplicate') {
+          // UTR already submitted
+          showError(utr, 'This UTR has already been submitted');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText; }
+        } else {
+          // Backend unreachable — fallback to direct WhatsApp (without Meet link)
+          console.warn('Backend unavailable, falling back to direct WhatsApp');
+          const message = `Hi! I've made the payment and want to set up my subscription.\n\nFirst Name: ${firstName.value.trim()}\nLast Name: ${lastName.value.trim()}\nEmail: ${email.value.trim()}\nSelected Plan: ${selectedPlan}\nUTR/Transaction ID: ${utr.value.trim()}\n\nPlease verify and schedule my 1:1 Google Meet setup. Thanks!`;
+          window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`, '_blank');
+          showStep(4);
+        }
+
+        // Reset button
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText; }
       }
     });
   }
