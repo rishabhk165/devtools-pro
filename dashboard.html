@@ -12,6 +12,27 @@
     <style>
         .gradient-text { background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .glass { background: rgba(17,24,39,0.8); backdrop-filter: blur(16px); }
+
+        /* Responsive: minimum 16px font size on mobile (<640px) */
+        @media (max-width: 639px) {
+            .text-xs, .text-sm {
+                font-size: 1rem !important;
+                line-height: 1.5rem !important;
+            }
+            /* Ensure all interactive elements have min 44x44px touch targets */
+            button, a, [role="button"], label[class*="cursor-pointer"], input[type="radio"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            /* Action buttons stack full-width on mobile */
+            .action-buttons-group {
+                flex-direction: column;
+            }
+            .action-buttons-group > button {
+                width: 100%;
+                flex: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans antialiased min-h-screen">
@@ -30,7 +51,7 @@
                     <img id="user-avatar" class="w-8 h-8 rounded-full border border-gray-700" src="" alt="">
                     <span id="user-name" class="text-sm text-gray-300 hidden sm:block"></span>
                 </div>
-                <button id="logout-btn" class="hidden px-3 py-1.5 text-xs text-gray-400 hover:text-white border border-gray-700 hover:border-gray-500 rounded-lg transition-all">Sign Out</button>
+                <button id="logout-btn" class="hidden px-3 py-1.5 min-h-[44px] sm:min-h-0 text-xs text-gray-400 hover:text-white border border-gray-700 hover:border-gray-500 rounded-lg transition-all">Sign Out</button>
             </div>
         </div>
     </header>
@@ -43,6 +64,19 @@
                 <svg class="animate-spin w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
             </div>
 
+            <!-- Error State -->
+            <div id="dash-error" class="hidden text-center py-16">
+                <div class="w-16 h-16 mx-auto mb-6 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center">
+                    <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Something went wrong</h2>
+                <p id="dash-error-message" class="text-gray-400 text-sm mb-8">Could not load your account data. Please try again.</p>
+                <button id="retry-btn" class="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all hover:shadow-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Retry
+                </button>
+            </div>
+
             <!-- Not Logged In State -->
             <div id="dash-login" class="hidden text-center py-16">
                 <div class="w-16 h-16 mx-auto mb-6 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
@@ -50,7 +84,7 @@
                 </div>
                 <h2 class="text-2xl font-bold text-white mb-2">Sign in to your account</h2>
                 <p class="text-gray-400 text-sm mb-8">View your plan, manage subscription, or get started.</p>
-                <button id="google-signin-btn" class="inline-flex items-center gap-3 px-6 py-3 bg-white hover:bg-gray-100 text-gray-800 font-semibold rounded-xl transition-all hover:shadow-lg">
+                <button id="google-signin-btn" class="inline-flex items-center gap-3 px-6 py-3 min-h-[44px] bg-white hover:bg-gray-100 text-gray-800 font-semibold rounded-xl transition-all hover:shadow-lg">
                     <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                     Continue with Google
                 </button>
@@ -58,6 +92,13 @@
 
             <!-- Dashboard Content (logged in) -->
             <div id="dash-content" class="hidden space-y-6">
+
+                <!-- Stale data indicator -->
+                <div id="stale-indicator" class="hidden flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+                    <svg class="w-4 h-4 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                    <span class="text-amber-300 text-sm">Data may be stale. Could not reach the server.</span>
+                </div>
+
                 <!-- Plan Status Card -->
                 <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -68,7 +109,7 @@
                     <!-- No Plan State -->
                     <div id="no-plan-state">
                         <p class="text-gray-400 text-sm mb-4">You don't have an active subscription yet.</p>
-                        <a href="index.html#signup" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all text-sm">
+                        <a href="index.html#signup" class="inline-flex items-center gap-2 px-5 py-2.5 min-h-[44px] sm:min-h-0 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all text-sm w-full sm:w-auto justify-center">
                             Get a Plan
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                         </a>
@@ -76,28 +117,62 @@
 
                     <!-- Active Plan State -->
                     <div id="active-plan-state" class="hidden">
-                        <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <div class="bg-gray-800/50 rounded-xl p-4">
-                                <p class="text-xs text-gray-500 mb-1">Current Plan</p>
+                                <p class="text-xs sm:text-xs text-gray-500 mb-1">Current Plan</p>
                                 <p id="dash-plan-name" class="text-white font-bold">—</p>
                             </div>
                             <div class="bg-gray-800/50 rounded-xl p-4">
-                                <p class="text-xs text-gray-500 mb-1">Status</p>
+                                <p class="text-xs sm:text-xs text-gray-500 mb-1">Status</p>
                                 <p id="dash-plan-status" class="text-emerald-400 font-bold">—</p>
                             </div>
                             <div class="bg-gray-800/50 rounded-xl p-4">
-                                <p class="text-xs text-gray-500 mb-1">Started</p>
+                                <p class="text-xs sm:text-xs text-gray-500 mb-1">Started</p>
                                 <p id="dash-plan-start" class="text-white font-medium text-sm">—</p>
                             </div>
                             <div class="bg-gray-800/50 rounded-xl p-4">
-                                <p class="text-xs text-gray-500 mb-1">Renews On</p>
+                                <p class="text-xs sm:text-xs text-gray-500 mb-1">Renews On</p>
                                 <p id="dash-plan-end" class="text-white font-medium text-sm">—</p>
                             </div>
                         </div>
-                        <div class="flex gap-3">
-                            <a href="index.html#signup" class="flex-1 text-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all text-sm">Upgrade Plan</a>
-                            <button id="cancel-plan-btn" class="px-4 py-2.5 border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium rounded-xl transition-all text-sm">Cancel</button>
+                        <!-- Cancelled message -->
+                        <p id="cancelled-message" class="hidden text-amber-300 text-sm mb-4"></p>
+                        <!-- Renewal error message -->
+                        <p id="renew-error-message" class="hidden text-red-400 text-sm mb-4"></p>
+                        <div class="flex flex-wrap gap-3 action-buttons-group">
+                            <button id="renew-plan-btn" class="px-4 py-2.5 sm:py-2.5 min-h-[44px] sm:min-h-0 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-all text-sm">Renew Plan</button>
+                            <button id="upgrade-plan-btn" class="flex-1 text-center px-4 py-2.5 sm:py-2.5 min-h-[44px] sm:min-h-0 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all text-sm">Upgrade Plan</button>
+                            <button id="cancel-plan-btn" class="px-4 py-2.5 sm:py-2.5 min-h-[44px] sm:min-h-0 border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium rounded-xl transition-all text-sm">Cancel</button>
                         </div>
+                    </div>
+
+                    <!-- Expired Plan State -->
+                    <div id="expired-plan-state" class="hidden">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="bg-gray-800/50 rounded-xl p-4">
+                                <p class="text-xs sm:text-xs text-gray-500 mb-1">Current Plan</p>
+                                <p id="dash-expired-plan-name" class="text-white font-bold">—</p>
+                            </div>
+                            <div class="bg-gray-800/50 rounded-xl p-4">
+                                <p class="text-xs sm:text-xs text-gray-500 mb-1">Status</p>
+                                <p class="text-red-400 font-bold">Expired</p>
+                            </div>
+                            <div class="bg-gray-800/50 rounded-xl p-4">
+                                <p class="text-xs sm:text-xs text-gray-500 mb-1">Started</p>
+                                <p id="dash-expired-plan-start" class="text-white font-medium text-sm">—</p>
+                            </div>
+                            <div class="bg-gray-800/50 rounded-xl p-4">
+                                <p class="text-xs sm:text-xs text-gray-500 mb-1">Expired On</p>
+                                <p id="dash-expired-plan-end" class="text-white font-medium text-sm">—</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4">Your plan has expired. Renew to continue using premium features.</p>
+                        <!-- Renewal error message for expired state -->
+                        <p id="renew-error-message-expired" class="hidden text-red-400 text-sm mb-4"></p>
+                        <button id="renew-plan-btn-expired" class="inline-flex items-center gap-2 px-5 py-2.5 min-h-[44px] sm:min-h-0 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-all text-sm w-full sm:w-auto justify-center">
+                            Renew Plan
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        </button>
                     </div>
                 </div>
 
@@ -128,19 +203,19 @@
                 <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
                     <h3 class="text-lg font-bold text-white mb-4">Quick Actions</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <a href="https://kiro.dev/downloads/" target="_blank" class="flex items-center gap-3 p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-indigo-500/30 rounded-xl transition-all">
+                        <a href="https://kiro.dev/downloads/" target="_blank" class="flex items-center gap-3 p-3 min-h-[44px] bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-indigo-500/30 rounded-xl transition-all">
                             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                             <span class="text-sm text-gray-300">Download Kiro IDE</span>
                         </a>
-                        <a href="https://kiro.dev/docs/billing" target="_blank" class="flex items-center gap-3 p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-indigo-500/30 rounded-xl transition-all">
+                        <a href="https://kiro.dev/docs/billing" target="_blank" class="flex items-center gap-3 p-3 min-h-[44px] bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-indigo-500/30 rounded-xl transition-all">
                             <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             <span class="text-sm text-gray-300">Billing Docs</span>
                         </a>
-                        <a href="https://api.whatsapp.com/send?phone=919019879108&text=Hi%2C%20I%20need%20help%20with%20my%20subscription" target="_blank" class="flex items-center gap-3 p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-emerald-500/30 rounded-xl transition-all">
+                        <a href="https://api.whatsapp.com/send?phone=919019879108&text=Hi%2C%20I%20need%20help%20with%20my%20subscription" target="_blank" class="flex items-center gap-3 p-3 min-h-[44px] bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-emerald-500/30 rounded-xl transition-all">
                             <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                             <span class="text-sm text-gray-300">WhatsApp Support</span>
                         </a>
-                        <a href="https://kiro.dev/faq" target="_blank" class="flex items-center gap-3 p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-indigo-500/30 rounded-xl transition-all">
+                        <a href="https://kiro.dev/faq" target="_blank" class="flex items-center gap-3 p-3 min-h-[44px] bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-indigo-500/30 rounded-xl transition-all">
                             <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <span class="text-sm text-gray-300">Kiro FAQs</span>
                         </a>
@@ -156,9 +231,98 @@
                     </div>
                     <h3 class="text-white font-bold mb-2">Cancel Subscription?</h3>
                     <p class="text-gray-400 text-sm mb-6">Your plan will remain active until the end of the current billing cycle. You won't be charged again.</p>
-                    <div class="flex gap-3">
-                        <button id="cancel-dismiss" class="flex-1 py-2.5 border border-gray-700 hover:border-gray-500 text-gray-300 rounded-xl text-sm font-medium transition-all">Keep Plan</button>
-                        <button id="cancel-confirm" class="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-sm font-bold transition-all">Yes, Cancel</button>
+                    <!-- Cancel error message -->
+                    <div id="cancel-error" class="hidden mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                        <p class="text-red-300 text-sm mb-2">Failed to cancel your plan. Please try again or contact support via WhatsApp.</p>
+                        <a id="cancel-error-whatsapp" href="https://api.whatsapp.com/send?phone=919019879108&text=Hi%2C%20I%20need%20help%20cancelling%20my%20subscription" target="_blank" class="inline-flex items-center gap-1 text-green-400 hover:text-green-300 text-sm font-medium">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Contact Support via WhatsApp
+                        </a>
+                    </div>
+                    <div id="cancel-modal-buttons" class="flex flex-col gap-3">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button id="cancel-dismiss" class="flex-1 py-2.5 min-h-[44px] sm:min-h-0 border border-gray-700 hover:border-gray-500 text-gray-300 rounded-xl text-sm font-medium transition-all">Keep Plan</button>
+                            <button id="cancel-confirm" class="flex-1 py-2.5 min-h-[44px] sm:min-h-0 bg-red-600 hover:bg-red-500 text-white rounded-xl text-sm font-bold transition-all">Yes, Cancel</button>
+                        </div>
+                        <button id="cancel-whatsapp" class="w-full py-2.5 min-h-[44px] sm:min-h-0 bg-green-600 hover:bg-green-500 text-white rounded-xl text-sm font-bold transition-all inline-flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Notify via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Renewal Confirmation Modal -->
+            <div id="renew-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+                <div class="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-sm mx-4 w-full">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-white font-bold text-lg">Renew Plan</h3>
+                        <button id="renew-modal-close" class="text-gray-400 hover:text-white transition-colors p-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-400 text-sm">Current Plan</span>
+                            <span id="renew-plan-name" class="text-white font-bold"></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400 text-sm">Renewal Price</span>
+                            <span id="renew-plan-price" class="text-emerald-400 font-bold"></span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs mb-4">Clicking below will open WhatsApp with a pre-filled message to our support team to process your renewal.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button id="renew-modal-dismiss" class="flex-1 py-2.5 min-h-[44px] sm:min-h-0 border border-gray-700 hover:border-gray-500 text-gray-300 rounded-xl text-sm font-medium transition-all">Cancel</button>
+                        <button id="renew-confirm-whatsapp" class="flex-1 py-2.5 min-h-[44px] sm:min-h-0 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-bold transition-all inline-flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Confirm via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upgrade Plan Modal -->
+            <div id="upgrade-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+                <div class="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-sm mx-4 w-full">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-white font-bold text-lg">Upgrade Plan</h3>
+                        <button id="upgrade-modal-close" class="text-gray-400 hover:text-white transition-colors p-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">Select a plan to upgrade to:</p>
+                    <div id="upgrade-options-list" class="space-y-2 mb-4">
+                        <!-- Dynamically populated plan options -->
+                    </div>
+                    <p class="text-gray-400 text-xs mb-4">Clicking below will open WhatsApp with a pre-filled message to our support team to process your upgrade.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button id="upgrade-modal-dismiss" class="flex-1 py-2.5 min-h-[44px] sm:min-h-0 border border-gray-700 hover:border-gray-500 text-gray-300 rounded-xl text-sm font-medium transition-all">Cancel</button>
+                        <button id="upgrade-confirm-whatsapp" disabled class="flex-1 py-2.5 min-h-[44px] sm:min-h-0 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold transition-all inline-flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Confirm via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WhatsApp Popup Fallback Modal -->
+            <div id="whatsapp-fallback-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+                <div class="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-sm mx-4 w-full">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-white font-bold text-lg">WhatsApp Message</h3>
+                        <button id="whatsapp-fallback-close" class="text-gray-400 hover:text-white transition-colors p-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-3">Could not open WhatsApp automatically. Copy the message below and paste it manually:</p>
+                    <textarea id="whatsapp-fallback-text" readonly class="w-full h-40 bg-gray-800/50 border border-gray-700 rounded-xl p-3 text-gray-200 text-sm resize-none focus:outline-none focus:border-indigo-500/50" aria-label="WhatsApp message text"></textarea>
+                    <div class="flex flex-col sm:flex-row gap-3 mt-4">
+                        <button id="whatsapp-fallback-copy" class="flex-1 py-2.5 min-h-[44px] sm:min-h-0 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold transition-all inline-flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            <span id="whatsapp-fallback-copy-label">Copy Message</span>
+                        </button>
+                        <button id="whatsapp-fallback-dismiss" class="px-4 py-2.5 min-h-[44px] sm:min-h-0 border border-gray-700 hover:border-gray-500 text-gray-300 rounded-xl text-sm font-medium transition-all">Close</button>
                     </div>
                 </div>
             </div>
@@ -167,6 +331,149 @@
 
     <script>
     const API_BASE = 'https://devtools-pro.onrender.com';
+    const REQUEST_TIMEOUT_MS = 10000;
+
+    // ─── Plan Hierarchy ───
+    const PLAN_HIERARCHY = [
+      { name: 'Pro', price: 946, priceUSD: 10 },
+      { name: 'Pro+', price: 1892, priceUSD: 20 },
+      { name: 'Pro Max', price: 4730, priceUSD: 50 },
+      { name: 'Power', price: 9461, priceUSD: 100 }
+    ];
+
+    // ─── WhatsApp Template Generator (inline) ───
+    const WHATSAPP_CONFIG = {
+      WHATSAPP_NUMBER: '919019879108',
+      MAX_WHATSAPP_MESSAGE_LENGTH: 1000
+    };
+
+    function formatDateWhatsApp(dateValue) {
+      if (!dateValue) return 'N/A';
+      const date = new Date(dateValue);
+      if (isNaN(date.getTime())) return 'N/A';
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    function safeField(value) {
+      if (value === null || value === undefined) return '';
+      return String(value);
+    }
+
+    function buildWhatsAppUrl(message, userFieldsSection) {
+      let encoded = encodeURIComponent(message);
+      if (encoded.length > WHATSAPP_CONFIG.MAX_WHATSAPP_MESSAGE_LENGTH) {
+        const encodedFields = encodeURIComponent(userFieldsSection);
+        const remainingBudget = WHATSAPP_CONFIG.MAX_WHATSAPP_MESSAGE_LENGTH - encodedFields.length;
+        if (remainingBudget <= 0) {
+          encoded = encodedFields.substring(0, WHATSAPP_CONFIG.MAX_WHATSAPP_MESSAGE_LENGTH);
+        } else {
+          const fieldsIndex = message.indexOf(userFieldsSection);
+          const beforeFields = message.substring(0, fieldsIndex);
+          const afterFields = message.substring(fieldsIndex + userFieldsSection.length);
+          if (encodeURIComponent(beforeFields + afterFields).length <= remainingBudget) {
+            // No truncation needed
+          } else {
+            let afterTruncated = afterFields;
+            let beforeTruncated = beforeFields;
+            const encodedBefore = encodeURIComponent(beforeFields);
+            const encodedAfter = encodeURIComponent(afterFields);
+            if (encodedBefore.length + encodedAfter.length > remainingBudget) {
+              const beforeBudget = Math.min(encodedBefore.length, Math.floor(remainingBudget * 0.4));
+              const afterBudget = remainingBudget - beforeBudget;
+              beforeTruncated = '';
+              for (let i = 0; i < beforeFields.length; i++) {
+                const candidate = beforeFields.substring(0, i + 1);
+                if (encodeURIComponent(candidate).length > beforeBudget) break;
+                beforeTruncated = candidate;
+              }
+              afterTruncated = '';
+              for (let i = 0; i < afterFields.length; i++) {
+                const candidate = afterFields.substring(0, i + 1);
+                if (encodeURIComponent(candidate).length > afterBudget) break;
+                afterTruncated = candidate;
+              }
+            }
+            encoded = encodeURIComponent(beforeTruncated + userFieldsSection + afterTruncated);
+          }
+          if (encoded.length > WHATSAPP_CONFIG.MAX_WHATSAPP_MESSAGE_LENGTH) {
+            encoded = encoded.substring(0, WHATSAPP_CONFIG.MAX_WHATSAPP_MESSAGE_LENGTH);
+          }
+        }
+      }
+      return `https://api.whatsapp.com/send?phone=${WHATSAPP_CONFIG.WHATSAPP_NUMBER}&text=${encoded}`;
+    }
+
+    function generateRenewalMessage(user) {
+      const name = safeField(user && user.name);
+      const email = safeField(user && user.email);
+      const plan = safeField(user && user.currentPlan);
+      const expiryDate = formatDateWhatsApp(user && user.planEndDate);
+      const userFieldsSection = `Name: ${name}\nEmail: ${email}\nCurrent Plan: ${plan}\nExpiry Date: ${expiryDate}`;
+      const message = `Hi, I'd like to renew my plan.\n\n${userFieldsSection}\n\nPlease process my renewal. Thank you!`;
+      return buildWhatsAppUrl(message, userFieldsSection);
+    }
+
+    function generateUpgradeMessage(user, newPlan) {
+      const name = safeField(user && user.name);
+      const email = safeField(user && user.email);
+      const currentPlan = safeField(user && user.currentPlan);
+      const upgradeTo = safeField(newPlan);
+      const expiryDate = formatDateWhatsApp(user && user.planEndDate);
+      const userFieldsSection = `Name: ${name}\nEmail: ${email}\nCurrent Plan: ${currentPlan}\nUpgrade To: ${upgradeTo}\nExpiry Date: ${expiryDate}`;
+      const message = `Hi, I'd like to upgrade my plan.\n\n${userFieldsSection}\n\nPlease process my upgrade. Thank you!`;
+      return buildWhatsAppUrl(message, userFieldsSection);
+    }
+
+    function generateCancellationMessage(user) {
+      const name = safeField(user && user.name);
+      const email = safeField(user && user.email);
+      const plan = safeField(user && user.currentPlan);
+      const expiryDate = formatDateWhatsApp(user && user.planEndDate);
+      const userFieldsSection = `Name: ${name}\nEmail: ${email}\nCurrent Plan: ${plan}\nExpiry Date: ${expiryDate}`;
+      const message = `Hi, I'd like to cancel my plan.\n\n${userFieldsSection}\n\nPlease confirm my cancellation. Thank you!`;
+      return buildWhatsAppUrl(message, userFieldsSection);
+    }
+
+    function openWhatsApp(url) {
+      const newWindow = window.open(url, '_blank');
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        showWhatsAppFallback(url);
+      }
+    }
+
+    function showWhatsAppFallback(url) {
+      try {
+        const urlObj = new URL(url);
+        const encodedText = urlObj.searchParams.get('text') || '';
+        const messageText = decodeURIComponent(encodedText);
+        const textarea = document.getElementById('whatsapp-fallback-text');
+        textarea.value = messageText;
+        document.getElementById('whatsapp-fallback-modal').classList.remove('hidden');
+      } catch (e) {
+        // If URL parsing fails, show the raw URL
+        const textarea = document.getElementById('whatsapp-fallback-text');
+        textarea.value = url;
+        document.getElementById('whatsapp-fallback-modal').classList.remove('hidden');
+      }
+    }
+
+    function getPlanPrice(planName) {
+      const plan = PLAN_HIERARCHY.find(p => p.name === planName);
+      return plan ? plan.price : null;
+    }
+
+    function getUpgradeOptions(planName) {
+      const currentIndex = PLAN_HIERARCHY.findIndex(p => p.name === planName);
+      if (currentIndex === -1) return [];
+      return PLAN_HIERARCHY.slice(currentIndex + 1);
+    }
+
+    // ─── State Machine ───
+    // States: LOADING, SIGNED_OUT, SIGNED_IN_NO_PLAN, SIGNED_IN_ACTIVE, SIGNED_IN_CANCELLED, SIGNED_IN_EXPIRED, ERROR
+    let currentState = 'LOADING';
 
     // Session management
     function getToken() { return localStorage.getItem('dt_token'); }
@@ -175,58 +482,141 @@
     function getStoredUser() { try { return JSON.parse(localStorage.getItem('dt_user')); } catch { return null; } }
     function setStoredUser(user) { localStorage.setItem('dt_user', JSON.stringify(user)); }
 
+    // Date formatting: DD/MM/YYYY
+    function formatDate(dateValue) {
+      if (!dateValue) return '—';
+      const date = new Date(dateValue);
+      if (isNaN(date.getTime())) return '—';
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
     // DOM elements
     const loadingEl = document.getElementById('dash-loading');
+    const errorEl = document.getElementById('dash-error');
     const loginEl = document.getElementById('dash-login');
     const contentEl = document.getElementById('dash-content');
     const userInfoEl = document.getElementById('user-info');
     const logoutBtn = document.getElementById('logout-btn');
+    const staleIndicator = document.getElementById('stale-indicator');
+    const retryBtn = document.getElementById('retry-btn');
 
-    // Initialize
+    // ─── State Transition ───
+    function setState(newState) {
+      currentState = newState;
+
+      // Hide all state containers
+      loadingEl.classList.add('hidden');
+      errorEl.classList.add('hidden');
+      loginEl.classList.add('hidden');
+      contentEl.classList.add('hidden');
+      userInfoEl.classList.add('hidden');
+      logoutBtn.classList.add('hidden');
+      staleIndicator.classList.add('hidden');
+
+      switch (newState) {
+        case 'LOADING':
+          loadingEl.classList.remove('hidden');
+          break;
+        case 'SIGNED_OUT':
+          loginEl.classList.remove('hidden');
+          loadGoogleSignIn();
+          break;
+        case 'SIGNED_IN_NO_PLAN':
+        case 'SIGNED_IN_ACTIVE':
+        case 'SIGNED_IN_CANCELLED':
+        case 'SIGNED_IN_EXPIRED':
+          contentEl.classList.remove('hidden');
+          userInfoEl.classList.remove('hidden');
+          logoutBtn.classList.remove('hidden');
+          break;
+        case 'ERROR':
+          errorEl.classList.remove('hidden');
+          break;
+      }
+    }
+
+    // ─── Initialize ───
     async function init() {
+      setState('LOADING');
+
       const token = getToken();
       if (!token) {
-        showLogin();
+        setState('SIGNED_OUT');
         return;
       }
 
-      // Fetch user data
+      // Fetch user data with 10-second timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
       try {
         const res = await fetch(`${API_BASE}/auth/me`, {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 'Authorization': `Bearer ${token}` },
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
+
         const data = await res.json();
 
         if (data.status === 'success') {
           setStoredUser(data.user);
-          showDashboard(data.user);
+          renderDashboard(data.user, false);
         } else {
+          // 401 or other auth failure — clear session and show sign-in
           clearToken();
-          showLogin();
+          setState('SIGNED_OUT');
         }
       } catch (e) {
-        // Offline fallback — show cached user
+        clearTimeout(timeoutId);
+
+        // Network failure or timeout — try cached fallback
         const cached = getStoredUser();
-        if (cached) { showDashboard(cached); }
-        else { clearToken(); showLogin(); }
+        if (cached) {
+          renderDashboard(cached, true);
+        } else {
+          showError('Could not load your account data. Please try again.');
+        }
       }
     }
 
-    function showLogin() {
-      loadingEl.classList.add('hidden');
-      loginEl.classList.remove('hidden');
-      contentEl.classList.add('hidden');
-      loadGoogleSignIn();
+    // ─── Show Error State ───
+    function showError(message) {
+      document.getElementById('dash-error-message').textContent = message || 'Could not load your account data. Please try again.';
+      setState('ERROR');
     }
 
-    function showDashboard(user) {
-      loadingEl.classList.add('hidden');
-      loginEl.classList.add('hidden');
-      contentEl.classList.remove('hidden');
+    // ─── Render Dashboard Based on User Data ───
+    function renderDashboard(user, isStale) {
+      // Determine which signed-in state to use
+      const planStatus = user.planStatus || 'none';
+      let targetState;
+
+      switch (planStatus) {
+        case 'active':
+          targetState = 'SIGNED_IN_ACTIVE';
+          break;
+        case 'cancelled':
+          targetState = 'SIGNED_IN_CANCELLED';
+          break;
+        case 'expired':
+          targetState = 'SIGNED_IN_EXPIRED';
+          break;
+        default:
+          targetState = 'SIGNED_IN_NO_PLAN';
+          break;
+      }
+
+      setState(targetState);
+
+      // Show stale indicator if using cached data
+      if (isStale) {
+        staleIndicator.classList.remove('hidden');
+      }
 
       // Header user info
-      userInfoEl.classList.remove('hidden');
-      logoutBtn.classList.remove('hidden');
       document.getElementById('user-avatar').src = user.picture || '';
       document.getElementById('user-name').textContent = user.name || '';
 
@@ -238,32 +628,88 @@
       if (user.meetLink) { meetEl.textContent = 'Open Meet Link'; meetEl.href = user.meetLink; }
       else { meetEl.textContent = 'Not assigned yet'; meetEl.removeAttribute('href'); }
 
-      // Plan state
+      // Plan display logic
       const badge = document.getElementById('plan-badge');
       const noPlan = document.getElementById('no-plan-state');
       const activePlan = document.getElementById('active-plan-state');
+      const expiredPlan = document.getElementById('expired-plan-state');
+      const cancelledMessage = document.getElementById('cancelled-message');
+      const cancelBtn = document.getElementById('cancel-plan-btn');
 
-      if (user.planStatus === 'active' || user.planStatus === 'cancelled') {
-        noPlan.classList.add('hidden');
-        activePlan.classList.remove('hidden');
-        document.getElementById('dash-plan-name').textContent = user.currentPlan || '—';
-        document.getElementById('dash-plan-status').textContent = user.planStatus === 'active' ? 'Active' : 'Cancelled (active until renewal)';
-        document.getElementById('dash-plan-status').className = user.planStatus === 'active' ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold text-xs';
-        document.getElementById('dash-plan-start').textContent = user.planStartDate ? new Date(user.planStartDate).toLocaleDateString('en-IN') : '—';
-        document.getElementById('dash-plan-end').textContent = user.planEndDate ? new Date(user.planEndDate).toLocaleDateString('en-IN') : '—';
-        badge.textContent = user.planStatus === 'active' ? 'Active' : 'Cancelled';
-        badge.className = user.planStatus === 'active' ? 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20';
-      } else {
-        noPlan.classList.remove('hidden');
-        activePlan.classList.add('hidden');
-        badge.textContent = 'No Plan';
-        badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-gray-700 text-gray-400';
+      // Hide all plan sub-states first
+      noPlan.classList.add('hidden');
+      activePlan.classList.add('hidden');
+      expiredPlan.classList.add('hidden');
+      cancelledMessage.classList.add('hidden');
+      cancelBtn.classList.remove('hidden');
+
+      // Hide upgrade button if user is on the highest plan (Power)
+      const upgradeBtn = document.getElementById('upgrade-plan-btn');
+      if (upgradeBtn) {
+        if (user.currentPlan === 'Power') {
+          upgradeBtn.classList.add('hidden');
+        } else {
+          upgradeBtn.classList.remove('hidden');
+        }
+      }
+
+      switch (targetState) {
+        case 'SIGNED_IN_ACTIVE':
+          activePlan.classList.remove('hidden');
+          noPlan.classList.add('hidden');
+          document.getElementById('dash-plan-name').textContent = user.currentPlan || '—';
+          document.getElementById('dash-plan-status').textContent = 'Active';
+          document.getElementById('dash-plan-status').className = 'text-emerald-400 font-bold';
+          document.getElementById('dash-plan-start').textContent = formatDate(user.planStartDate);
+          document.getElementById('dash-plan-end').textContent = formatDate(user.planEndDate);
+          badge.textContent = 'Active';
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+          break;
+
+        case 'SIGNED_IN_CANCELLED':
+          activePlan.classList.remove('hidden');
+          noPlan.classList.add('hidden');
+          document.getElementById('dash-plan-name').textContent = user.currentPlan || '—';
+          document.getElementById('dash-plan-status').textContent = 'Cancelled';
+          document.getElementById('dash-plan-status').className = 'text-amber-400 font-bold';
+          document.getElementById('dash-plan-start').textContent = formatDate(user.planStartDate);
+          document.getElementById('dash-plan-end').textContent = formatDate(user.planEndDate);
+          badge.textContent = 'Cancelled';
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20';
+          // Show cancelled message and hide cancel button
+          cancelledMessage.classList.remove('hidden');
+          cancelledMessage.textContent = `Active until ${formatDate(user.planEndDate)}`;
+          cancelBtn.classList.add('hidden');
+          break;
+
+        case 'SIGNED_IN_EXPIRED':
+          expiredPlan.classList.remove('hidden');
+          noPlan.classList.add('hidden');
+          activePlan.classList.add('hidden');
+          document.getElementById('dash-expired-plan-name').textContent = user.currentPlan || '—';
+          document.getElementById('dash-expired-plan-start').textContent = formatDate(user.planStartDate);
+          document.getElementById('dash-expired-plan-end').textContent = formatDate(user.planEndDate);
+          badge.textContent = 'Expired';
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20';
+          break;
+
+        case 'SIGNED_IN_NO_PLAN':
+        default:
+          noPlan.classList.remove('hidden');
+          activePlan.classList.add('hidden');
+          badge.textContent = 'No Plan';
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-gray-700 text-gray-400';
+          break;
       }
     }
 
-    // Google Sign-In
+    // ─── Google Sign-In ───
     function loadGoogleSignIn() {
-      // Load Google Identity Services library
+      // Load Google Identity Services library if not already loaded
+      if (window.google && google.accounts) {
+        initGoogleAuth();
+        return;
+      }
       const script = document.createElement('script');
       script.src = 'https://accounts.google.com/gsi/client';
       script.onload = initGoogleAuth;
@@ -305,7 +751,7 @@
         if (data.status === 'success') {
           setToken(data.token);
           setStoredUser(data.user);
-          showDashboard(data.user);
+          renderDashboard(data.user, false);
         } else {
           alert('Sign-in failed. Please try again.');
         }
@@ -314,14 +760,56 @@
       }
     }
 
-    // Logout
+    // ─── Logout ───
     logoutBtn.addEventListener('click', () => {
       clearToken();
       window.location.reload();
     });
 
-    // Cancel plan
+    // ─── Retry Button ───
+    retryBtn.addEventListener('click', () => {
+      init();
+    });
+
+    // ─── WhatsApp Template Helpers (inline from whatsapp-templates.js) ───
+    const WHATSAPP_NUMBER = '919019879108';
+    const MAX_WHATSAPP_MESSAGE_LENGTH = 1000;
+
+    function safeField(value) {
+      if (value === null || value === undefined) return '';
+      return String(value);
+    }
+
+    function formatDateWhatsApp(dateValue) {
+      if (!dateValue) return 'N/A';
+      const date = new Date(dateValue);
+      if (isNaN(date.getTime())) return 'N/A';
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    function generateCancellationMessage(user) {
+      const name = safeField(user && user.name);
+      const email = safeField(user && user.email);
+      const plan = safeField(user && user.currentPlan);
+      const expiryDate = formatDateWhatsApp(user && user.planEndDate);
+
+      const message = `Hi, I'd like to cancel my plan.\n\nName: ${name}\nEmail: ${email}\nCurrent Plan: ${plan}\nExpiry Date: ${expiryDate}\n\nPlease confirm my cancellation. Thank you!`;
+
+      let encoded = encodeURIComponent(message);
+      if (encoded.length > MAX_WHATSAPP_MESSAGE_LENGTH) {
+        encoded = encoded.substring(0, MAX_WHATSAPP_MESSAGE_LENGTH);
+      }
+
+      return `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encoded}`;
+    }
+
+    // ─── Cancel Plan ───
     document.getElementById('cancel-plan-btn')?.addEventListener('click', () => {
+      // Reset error state when opening modal
+      document.getElementById('cancel-error').classList.add('hidden');
       document.getElementById('cancel-modal').classList.remove('hidden');
     });
     document.getElementById('cancel-dismiss')?.addEventListener('click', () => {
@@ -329,6 +817,9 @@
     });
     document.getElementById('cancel-confirm')?.addEventListener('click', async () => {
       const token = getToken();
+      const cancelError = document.getElementById('cancel-error');
+      cancelError.classList.add('hidden');
+
       try {
         const res = await fetch(`${API_BASE}/auth/cancel-plan`, {
           method: 'POST',
@@ -337,14 +828,198 @@
         const data = await res.json();
         if (data.status === 'success') {
           document.getElementById('cancel-modal').classList.add('hidden');
-          init(); // Refresh dashboard
+
+          // Update UI to show cancelled state without full page reload
+          const user = getStoredUser();
+          if (user) {
+            user.planStatus = 'cancelled';
+            setStoredUser(user);
+          }
+
+          // Update badge to "Cancelled"
+          const badge = document.getElementById('plan-badge');
+          badge.textContent = 'Cancelled';
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20';
+
+          // Update plan status text
+          const planStatusEl = document.getElementById('dash-plan-status');
+          planStatusEl.textContent = 'Cancelled';
+          planStatusEl.className = 'text-amber-400 font-bold';
+
+          // Hide cancel button
+          document.getElementById('cancel-plan-btn').classList.add('hidden');
+
+          // Show "Your plan remains active until [date]" message
+          const cancelledMessage = document.getElementById('cancelled-message');
+          const endDate = user && user.planEndDate ? formatDate(user.planEndDate) : '—';
+          cancelledMessage.textContent = `Your plan remains active until ${endDate}`;
+          cancelledMessage.classList.remove('hidden');
+        } else {
+          // API returned an error response
+          cancelError.classList.remove('hidden');
         }
       } catch (e) {
-        alert('Failed to cancel. Please contact support on WhatsApp.');
+        // Network or server error — show error with WhatsApp fallback
+        cancelError.classList.remove('hidden');
       }
     });
 
-    // Boot
+    // ─── Notify via WhatsApp (Cancel) ───
+    document.getElementById('cancel-whatsapp')?.addEventListener('click', () => {
+      const user = getStoredUser();
+      const url = generateCancellationMessage(user);
+      openWhatsApp(url);
+    });
+
+    // ─── Renew Plan ───
+    function handleRenewClick() {
+      const user = getStoredUser();
+
+      // If plan_end_date or current_plan is null, show error and do NOT open confirmation card
+      if (!user || !user.currentPlan || !user.planEndDate) {
+        const errorMsg = 'Plan details could not be loaded. Please refresh the page or contact support.';
+
+        // Show error in active-plan-state area if visible
+        const errorActive = document.getElementById('renew-error-message');
+        if (errorActive) {
+          errorActive.textContent = errorMsg;
+          errorActive.classList.remove('hidden');
+          setTimeout(() => errorActive.classList.add('hidden'), 5000);
+        }
+
+        // Show error in expired-plan-state area if visible
+        const errorExpired = document.getElementById('renew-error-message-expired');
+        if (errorExpired) {
+          errorExpired.textContent = errorMsg;
+          errorExpired.classList.remove('hidden');
+          setTimeout(() => errorExpired.classList.add('hidden'), 5000);
+        }
+        return;
+      }
+
+      // Populate renewal modal with plan info
+      const price = getPlanPrice(user.currentPlan);
+      document.getElementById('renew-plan-name').textContent = user.currentPlan;
+      document.getElementById('renew-plan-price').textContent = price ? `₹${price.toLocaleString('en-IN')}/mo` : '—';
+
+      // Show the renewal confirmation modal
+      document.getElementById('renew-modal').classList.remove('hidden');
+    }
+
+    document.getElementById('renew-plan-btn')?.addEventListener('click', handleRenewClick);
+    document.getElementById('renew-plan-btn-expired')?.addEventListener('click', handleRenewClick);
+
+    // Close renewal modal
+    document.getElementById('renew-modal-close')?.addEventListener('click', () => {
+      document.getElementById('renew-modal').classList.add('hidden');
+    });
+    document.getElementById('renew-modal-dismiss')?.addEventListener('click', () => {
+      document.getElementById('renew-modal').classList.add('hidden');
+    });
+
+    // Confirm renewal via WhatsApp
+    document.getElementById('renew-confirm-whatsapp')?.addEventListener('click', () => {
+      const user = getStoredUser();
+      const url = generateRenewalMessage(user);
+      openWhatsApp(url);
+      document.getElementById('renew-modal').classList.add('hidden');
+    });
+
+    // ─── Upgrade Plan ───
+    let selectedUpgradePlan = null;
+
+    function handleUpgradeClick() {
+      const user = getStoredUser();
+      if (!user || !user.currentPlan) return;
+
+      const options = getUpgradeOptions(user.currentPlan);
+      if (options.length === 0) return;
+
+      // Reset selection
+      selectedUpgradePlan = null;
+      document.getElementById('upgrade-confirm-whatsapp').disabled = true;
+
+      // Populate the upgrade options list
+      const listEl = document.getElementById('upgrade-options-list');
+      listEl.innerHTML = '';
+
+      options.forEach((plan) => {
+        const card = document.createElement('label');
+        card.className = 'flex items-center gap-3 p-4 min-h-[44px] bg-gray-800/50 border border-gray-700/50 rounded-xl cursor-pointer transition-all hover:border-indigo-500/50 w-full';
+        card.innerHTML = `
+          <input type="radio" name="upgrade-plan" value="${plan.name}" class="w-4 h-4 text-indigo-600 bg-gray-800 border-gray-600 focus:ring-indigo-500 focus:ring-2">
+          <div class="flex-1 flex justify-between items-center">
+            <span class="text-white font-semibold text-sm">${plan.name}</span>
+            <span class="text-indigo-400 font-bold text-sm">₹${plan.price.toLocaleString('en-IN')}/mo</span>
+          </div>
+        `;
+        card.addEventListener('click', () => {
+          selectedUpgradePlan = plan.name;
+          document.getElementById('upgrade-confirm-whatsapp').disabled = false;
+          // Update visual selection state
+          listEl.querySelectorAll('label').forEach(l => {
+            l.classList.remove('border-indigo-500', 'bg-indigo-500/10');
+            l.classList.add('border-gray-700/50');
+          });
+          card.classList.remove('border-gray-700/50');
+          card.classList.add('border-indigo-500', 'bg-indigo-500/10');
+        });
+        listEl.appendChild(card);
+      });
+
+      // Show the upgrade modal
+      document.getElementById('upgrade-modal').classList.remove('hidden');
+    }
+
+    document.getElementById('upgrade-plan-btn')?.addEventListener('click', handleUpgradeClick);
+
+    // Close upgrade modal
+    document.getElementById('upgrade-modal-close')?.addEventListener('click', () => {
+      document.getElementById('upgrade-modal').classList.add('hidden');
+    });
+    document.getElementById('upgrade-modal-dismiss')?.addEventListener('click', () => {
+      document.getElementById('upgrade-modal').classList.add('hidden');
+    });
+
+    // Confirm upgrade via WhatsApp
+    document.getElementById('upgrade-confirm-whatsapp')?.addEventListener('click', () => {
+      if (!selectedUpgradePlan) return;
+      const user = getStoredUser();
+      const url = generateUpgradeMessage(user, selectedUpgradePlan);
+      openWhatsApp(url);
+      document.getElementById('upgrade-modal').classList.add('hidden');
+    });
+
+    // ─── WhatsApp Fallback Modal ───
+    document.getElementById('whatsapp-fallback-close')?.addEventListener('click', () => {
+      document.getElementById('whatsapp-fallback-modal').classList.add('hidden');
+    });
+    document.getElementById('whatsapp-fallback-dismiss')?.addEventListener('click', () => {
+      document.getElementById('whatsapp-fallback-modal').classList.add('hidden');
+    });
+    document.getElementById('whatsapp-fallback-copy')?.addEventListener('click', async () => {
+      const textarea = document.getElementById('whatsapp-fallback-text');
+      const copyLabel = document.getElementById('whatsapp-fallback-copy-label');
+      try {
+        await navigator.clipboard.writeText(textarea.value);
+        copyLabel.textContent = 'Copied!';
+        setTimeout(() => { copyLabel.textContent = 'Copy Message'; }, 2000);
+      } catch (e) {
+        // Fallback: select text in textarea for manual copy
+        textarea.select();
+        textarea.setSelectionRange(0, textarea.value.length);
+        try {
+          document.execCommand('copy');
+          copyLabel.textContent = 'Copied!';
+          setTimeout(() => { copyLabel.textContent = 'Copy Message'; }, 2000);
+        } catch (err) {
+          copyLabel.textContent = 'Select & copy manually';
+          setTimeout(() => { copyLabel.textContent = 'Copy Message'; }, 3000);
+        }
+      }
+    });
+
+    // ─── Boot ───
     init();
     </script>
 </body>
