@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rishabhk165.github.io/devtools-pro/sitemap.xml
+Sitemap: https://devtools-proai.github.io/devtoolspro/sitemap.xml
